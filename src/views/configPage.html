@@ -259,7 +259,7 @@
               </label>
               <label class="inline-flex items-center">
                 <input type="checkbox" name="enabledNotifiers" value="wechatbot" class="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                <span class="ml-2 text-sm text-gray-700">企业微信机器人</span>
+                <span class="ml-2 text-sm text-gray-700">企业微信自建应用</span>
               </label>
               <label class="inline-flex items-center">
                 <input type="checkbox" name="enabledNotifiers" value="email" class="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
@@ -293,8 +293,8 @@
               <a href="https://webhook.site" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-sm">
                 <i class="fas fa-external-link-alt ml-1"></i> Webhook 调试工具
               </a>
-              <a href="https://developer.work.weixin.qq.com/document/path/91770" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-sm">
-                <i class="fas fa-external-link-alt ml-1"></i> 企业微信机器人文档
+              <a href="https://developer.work.weixin.qq.com/document/path/90236" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-sm">
+                <i class="fas fa-external-link-alt ml-1"></i> 企业微信自建应用文档
               </a>
               <a href="https://developers.cloudflare.com/workers/tutorials/send-emails-with-resend/" target="_blank" class="text-indigo-600 hover:text-indigo-800 text-sm">
                 <i class="fas fa-external-link-alt ml-1"></i> 获取 Resend API Key
@@ -440,45 +440,31 @@
           </div>
 
           <div id="wechatbotConfig" class="config-section">
-            <h4 class="text-md font-medium text-gray-900 mb-3">企业微信机器人 配置</h4>
-            <div class="grid grid-cols-1 gap-4 mb-4">
+            <h4 class="text-md font-medium text-gray-900 mb-3">企业微信自建应用配置</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label for="wechatbotWebhook" class="block text-sm font-medium text-gray-700">机器人 Webhook URL</label>
-                <div class="mt-1 flex flex-col sm:flex-row sm:items-center gap-3">
-                  <input type="url" id="wechatbotWebhook" placeholder="留空表示不修改；输入新值将更新" class="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                  <button type="button" id="clearWechatbotWebhook" class="btn-warning text-white px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap">
-                    <i class="fas fa-eraser mr-2"></i>清空
-                  </button>
-                </div>
-                <p id="WECHATBOT_WEBHOOKStatus" class="mt-1 text-xs text-gray-500">加载中...</p>
-                <p class="mt-1 text-sm text-gray-500">从企业微信群聊中添加机器人获取的 Webhook URL</p>
+                <label for="wecomCorpId" class="block text-sm font-medium text-gray-700">CorpID</label>
+                <input type="text" id="wecomCorpId" placeholder="企业 ID（ww 开头）" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
               </div>
               <div>
-                <label for="wechatbotMsgType" class="block text-sm font-medium text-gray-700">消息类型</label>
-                <select id="wechatbotMsgType" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                  <option value="text">文本消息</option>
-                  <option value="markdown">Markdown消息</option>
-                </select>
-                <p class="mt-1 text-sm text-gray-500">选择发送的消息格式类型</p>
+                <label for="wecomSecret" class="block text-sm font-medium text-gray-700">Secret</label>
+                <div class="mt-1 flex gap-3"><input type="password" id="wecomSecret" placeholder="留空表示不修改" class="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3"><button type="button" id="clearWecomSecret" class="btn-warning text-white px-4 py-2 rounded-md">清空</button></div>
+                <p id="WECOM_SECRETStatus" class="mt-1 text-xs text-gray-500">加载中...</p>
               </div>
               <div>
-                <label for="wechatbotAtMobiles" class="block text-sm font-medium text-gray-700">@手机号 (可选)</label>
-                <input type="text" id="wechatbotAtMobiles" placeholder="13800138000,13900139000" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                <p class="mt-1 text-sm text-gray-500">需要@的手机号，多个用逗号分隔，留空则不@任何人</p>
+                <label for="wecomAgentId" class="block text-sm font-medium text-gray-700">AgentId</label>
+                <input type="text" inputmode="numeric" id="wecomAgentId" placeholder="应用 AgentId" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
               </div>
               <div>
-                <label for="wechatbotAtAll" class="block text-sm font-medium text-gray-700 mb-2">@所有人</label>
-                <label class="inline-flex items-center">
-                  <input type="checkbox" id="wechatbotAtAll" class="form-checkbox h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
-                  <span class="ml-2 text-sm text-gray-700">发送消息时@所有人</span>
-                </label>
+                <label for="wecomToUser" class="block text-sm font-medium text-gray-700">接收人 UserID</label>
+                <input type="text" id="wecomToUser" placeholder="多个 UserID 用 | 分隔；@all 表示全部成员" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3">
+              </div>
+              <div>
+                <label for="wecomMsgType" class="block text-sm font-medium text-gray-700">消息类型</label>
+                <select id="wecomMsgType" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3"><option value="text">text</option><option value="markdown">markdown</option></select>
               </div>
             </div>
-            <div class="flex justify-end">
-              <button type="button" id="testWechatBotBtn" class="btn-secondary text-white px-4 py-2 rounded-md text-sm font-medium">
-                <i class="fas fa-paper-plane mr-2"></i>测试 企业微信机器人
-              </button>
-            </div>
+            <div class="flex justify-end"><button type="button" id="testWechatBotBtn" class="btn-secondary text-white px-4 py-2 rounded-md text-sm font-medium"><i class="fas fa-paper-plane mr-2"></i>测试企业微信自建应用</button></div>
           </div>
 
           <div id="emailConfig" class="config-section">
@@ -782,7 +768,7 @@
       setSecretStatus('NOTIFYX_API_KEY', cfg.NOTIFYX_API_KEY ? '已配置（已隐藏）' : '未配置');
       setSecretStatus('WEBHOOK_URL', cfg.WEBHOOK_URL ? '已配置（已隐藏）' : '未配置');
       setSecretStatus('WEBHOOK_HEADERS', cfg.WEBHOOK_HEADERS ? '已配置（已隐藏）' : '未配置');
-      setSecretStatus('WECHATBOT_WEBHOOK', cfg.WECHATBOT_WEBHOOK ? '已配置（已隐藏）' : '未配置');
+      setSecretStatus('WECOM_SECRET', cfg.WECOM_SECRET ? '已配置（已隐藏）' : '未配置');
       setSecretStatus('RESEND_API_KEY', cfg.RESEND_API_KEY ? '已配置（已隐藏）' : '未配置');
       setSecretStatus('BARK_DEVICE_KEY', cfg.BARK_DEVICE_KEY ? '已配置（已隐藏）' : '未配置');
       setSecretStatus('THIRD_PARTY_API_TOKEN', cfg.THIRD_PARTY_API_TOKEN ? '已配置（已隐藏）' : '未配置');
@@ -844,9 +830,10 @@
         if (tgTopicEl) tgTopicEl.value = config.TG_TOPIC_ID || '';
         document.getElementById('webhookMethod').value = config.WEBHOOK_METHOD || 'POST';
         document.getElementById('webhookTemplate').value = config.WEBHOOK_TEMPLATE || '';
-        document.getElementById('wechatbotMsgType').value = config.WECHATBOT_MSG_TYPE || 'text';
-        document.getElementById('wechatbotAtMobiles').value = config.WECHATBOT_AT_MOBILES || '';
-        document.getElementById('wechatbotAtAll').checked = config.WECHATBOT_AT_ALL === 'true';
+        document.getElementById('wecomMsgType').value = config.WECOM_MSG_TYPE || 'text';
+        document.getElementById('wecomCorpId').value = config.WECOM_CORP_ID || '';
+        document.getElementById('wecomToUser').value = config.WECOM_TO_USER || '';
+        document.getElementById('wecomAgentId').value = config.WECOM_AGENT_ID || '';
         document.getElementById('emailFrom').value = config.EMAIL_FROM || '';
         document.getElementById('emailFromName').value = config.EMAIL_FROM_NAME || '订阅提醒系统';
         document.getElementById('emailTo').value = config.EMAIL_TO || '';
@@ -863,7 +850,7 @@
         document.getElementById('notifyxApiKey').value = '';
         document.getElementById('webhookUrl').value = '';
         document.getElementById('webhookHeaders').value = '';
-        document.getElementById('wechatbotWebhook').value = '';
+        document.getElementById('wecomSecret').value = '';
         document.getElementById('resendApiKey').value = '';
         document.getElementById('barkDeviceKey').value = '';
         document.getElementById('thirdPartyToken').value = '';
@@ -876,7 +863,7 @@
           NOTIFYX_API_KEY: config.NOTIFYX_API_KEY_CONFIGURED === true,
           WEBHOOK_URL: config.WEBHOOK_URL_CONFIGURED === true,
           WEBHOOK_HEADERS: config.WEBHOOK_HEADERS_CONFIGURED === true,
-          WECHATBOT_WEBHOOK: config.WECHATBOT_WEBHOOK_CONFIGURED === true,
+          WECOM_SECRET: config.WECOM_SECRET_CONFIGURED === true,
           RESEND_API_KEY: config.RESEND_API_KEY_CONFIGURED === true,
           BARK_DEVICE_KEY: config.BARK_DEVICE_KEY_CONFIGURED === true,
           THIRD_PARTY_API_TOKEN: config.THIRD_PARTY_API_TOKEN_CONFIGURED === true,
@@ -1067,7 +1054,7 @@
         NOTIFYX_API_KEY: document.getElementById('notifyxApiKey').value.trim(),
         WEBHOOK_URL: document.getElementById('webhookUrl').value.trim(),
         WEBHOOK_HEADERS: document.getElementById('webhookHeaders').value.trim(),
-        WECHATBOT_WEBHOOK: document.getElementById('wechatbotWebhook').value.trim(),
+        WECOM_SECRET: document.getElementById('wecomSecret').value.trim(),
         RESEND_API_KEY: document.getElementById('resendApiKey').value.trim(),
         BARK_DEVICE_KEY: document.getElementById('barkDeviceKey').value.trim(),
         THIRD_PARTY_API_TOKEN: document.getElementById('thirdPartyToken').value.trim(),
@@ -1081,9 +1068,10 @@
         WEBHOOK_METHOD: document.getElementById('webhookMethod').value,
         WEBHOOK_TEMPLATE: document.getElementById('webhookTemplate').value.trim(),
         SHOW_LUNAR: document.getElementById('showLunarGlobal').checked,
-        WECHATBOT_MSG_TYPE: document.getElementById('wechatbotMsgType').value,
-        WECHATBOT_AT_MOBILES: document.getElementById('wechatbotAtMobiles').value.trim(),
-        WECHATBOT_AT_ALL: document.getElementById('wechatbotAtAll').checked.toString(),
+        WECOM_CORP_ID: document.getElementById('wecomCorpId').value.trim(),
+        WECOM_MSG_TYPE: document.getElementById('wecomMsgType').value,
+        WECOM_TO_USER: document.getElementById('wecomToUser').value.trim(),
+        WECOM_AGENT_ID: document.getElementById('wecomAgentId').value.trim(),
         EMAIL_FROM: document.getElementById('emailFrom').value.trim(),
         EMAIL_FROM_NAME: document.getElementById('emailFromName').value.trim(),
         EMAIL_TO: document.getElementById('emailTo').value.trim(),
@@ -1187,7 +1175,7 @@
       const originalContent = button.innerHTML;
       const serviceName = type === 'telegram' ? 'Telegram' :
                           type === 'notifyx' ? 'NotifyX' :
-                          type === 'wechatbot' ? '企业微信机器人' :
+                          type === 'wechatbot' ? '企业微信自建应用' :
                           type === 'email' ? '邮件通知' :
                           type === 'bark' ? 'Bark' :
                           type === 'gotify' ? 'Gotify' :
@@ -1217,11 +1205,12 @@
         if (url) config.WEBHOOK_URL = url;
         if (headers) config.WEBHOOK_HEADERS = headers;
       } else if (type === 'wechatbot') {
-        config.WECHATBOT_MSG_TYPE = document.getElementById('wechatbotMsgType').value;
-        config.WECHATBOT_AT_MOBILES = document.getElementById('wechatbotAtMobiles').value.trim();
-        config.WECHATBOT_AT_ALL = document.getElementById('wechatbotAtAll').checked.toString();
-        const url = document.getElementById('wechatbotWebhook').value.trim();
-        if (url) config.WECHATBOT_WEBHOOK = url;
+        config.WECOM_CORP_ID = document.getElementById('wecomCorpId').value.trim();
+        config.WECOM_MSG_TYPE = document.getElementById('wecomMsgType').value;
+        config.WECOM_TO_USER = document.getElementById('wecomToUser').value.trim();
+        config.WECOM_AGENT_ID = document.getElementById('wecomAgentId').value.trim();
+        const secret = document.getElementById('wecomSecret').value.trim();
+        if (secret) config.WECOM_SECRET = secret;
       } else if (type === 'email') {
         const key = document.getElementById('resendApiKey').value.trim();
         if (key) config.RESEND_API_KEY = key;
@@ -1349,7 +1338,7 @@
       wireSecretInput('notifyxApiKey', 'NOTIFYX_API_KEY');
       wireSecretInput('webhookUrl', 'WEBHOOK_URL');
       wireSecretInput('webhookHeaders', 'WEBHOOK_HEADERS');
-      wireSecretInput('wechatbotWebhook', 'WECHATBOT_WEBHOOK');
+      wireSecretInput('wecomSecret', 'WECOM_SECRET');
       wireSecretInput('resendApiKey', 'RESEND_API_KEY');
       wireSecretInput('barkDeviceKey', 'BARK_DEVICE_KEY');
       wireSecretInput('thirdPartyToken', 'THIRD_PARTY_API_TOKEN');
@@ -1362,7 +1351,7 @@
       wireClearSecretButton('clearNotifyxApiKey', 'notifyxApiKey', 'NOTIFYX_API_KEY');
       wireClearSecretButton('clearWebhookUrl', 'webhookUrl', 'WEBHOOK_URL');
       wireClearSecretButton('clearWebhookHeaders', 'webhookHeaders', 'WEBHOOK_HEADERS');
-      wireClearSecretButton('clearWechatbotWebhook', 'wechatbotWebhook', 'WECHATBOT_WEBHOOK');
+      wireClearSecretButton('clearWecomSecret', 'wecomSecret', 'WECOM_SECRET');
       wireClearSecretButton('clearResendApiKey', 'resendApiKey', 'RESEND_API_KEY');
       wireClearSecretButton('clearBarkDeviceKey', 'barkDeviceKey', 'BARK_DEVICE_KEY');
       wireClearSecretButton('clearThirdPartyToken', 'thirdPartyToken', 'THIRD_PARTY_API_TOKEN');

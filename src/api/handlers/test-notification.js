@@ -3,7 +3,7 @@ import { formatBeijingTime } from '../../core/time.js';
 import { sendTelegramNotification } from '../../services/notify/telegram.js';
 import { sendNotifyXNotification } from '../../services/notify/notifyx.js';
 import { sendWebhookNotification } from '../../services/notify/webhook.js';
-import { sendWechatBotNotification } from '../../services/notify/wechat.js';
+import { sendWecomAppNotification } from '../../services/notify/wechat.js';
 import { sendEmailNotification } from '../../services/notify/email.js';
 import { sendBarkNotification } from '../../services/notify/bark.js';
 import { sendGotifyNotification } from '../../services/notify/gotify.js';
@@ -81,19 +81,18 @@ async function handleTestNotification(request, env) {
     } else if (type === 'wechatbot') {
       const testConfig = {
         ...config,
-        WECHATBOT_WEBHOOK: (typeof body.WECHATBOT_WEBHOOK === 'string' && body.WECHATBOT_WEBHOOK.trim().length > 0)
-          ? body.WECHATBOT_WEBHOOK.trim()
-          : config.WECHATBOT_WEBHOOK,
-        WECHATBOT_MSG_TYPE: body.WECHATBOT_MSG_TYPE || config.WECHATBOT_MSG_TYPE,
-        WECHATBOT_AT_MOBILES: body.WECHATBOT_AT_MOBILES || config.WECHATBOT_AT_MOBILES,
-        WECHATBOT_AT_ALL: body.WECHATBOT_AT_ALL || config.WECHATBOT_AT_ALL
+        WECOM_CORP_ID: body.WECOM_CORP_ID || config.WECOM_CORP_ID,
+        WECOM_SECRET: (typeof body.WECOM_SECRET === 'string' && body.WECOM_SECRET.trim()) || config.WECOM_SECRET,
+        WECOM_AGENT_ID: body.WECOM_AGENT_ID || config.WECOM_AGENT_ID,
+        WECOM_TO_USER: body.WECOM_TO_USER || config.WECOM_TO_USER,
+        WECOM_MSG_TYPE: body.WECOM_MSG_TYPE || config.WECOM_MSG_TYPE
       };
 
       const title = '测试通知';
-      const content = '这是一条测试通知，用于验证企业微信机器人功能是否正常工作。\n\n发送时间: ' + formatBeijingTime();
+      const content = '这是一条测试通知，用于验证企业微信自建应用功能是否正常工作。\n\n发送时间: ' + formatBeijingTime();
 
-      success = await sendWechatBotNotification(title, content, testConfig);
-      message = success ? '企业微信机器人通知发送成功' : '企业微信机器人通知发送失败，请检查配置';
+      success = await sendWecomAppNotification(title, content, testConfig);
+      message = success ? '企业微信自建应用通知发送成功' : '企业微信自建应用通知发送失败，请检查配置';
     } else if (type === 'email') {
       const testConfig = {
         ...config,

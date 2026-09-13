@@ -136,12 +136,6 @@ describe('其它渠道 happy path', () => {
     ['bark', barkChannel, { BARK_DEVICE_KEY: 'k', BARK_SERVER: 'https://api.day.app' }, { code: 200 }],
     ['email', emailChannel, { RESEND_API_KEY: 'k', EMAIL_FROM: 'a@b.com', EMAIL_TO: 'c@d.com' }, { id: 'x' }],
     ['webhook', webhookChannel, { WEBHOOK_URL: 'https://x.example' }, { ok: true }],
-    [
-      'wechatbot',
-      wecomChannel,
-      { WECHATBOT_WEBHOOK: 'https://qyapi.example/x' },
-      { errcode: 0 }
-    ]
   ];
 
   cases.forEach(([name, ch, config, body]) => {
@@ -156,6 +150,62 @@ describe('其它渠道 happy path', () => {
       const r = await ch.send({ title: '测试', content: '内容' }, {});
       expect(r.success).toBe(false);
     });
+  });
+});
+
+describe('企业微信自建应用渠道', () => {
+  const config = {
+    WECOM_CORP_ID: 'ww-corp',
+    WECOM_SECRET: 'secret',
+    WECOM_AGENT_ID: '1000002',
+    WECOM_TO_USER: 'zhangsan|lisi',
+    WECOM_MSG_TYPE: 'text'
+  };
+
+  it('先获取 access_token，再向指定 UserID 发送 text', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(jsonResponse({ errcode: 0, access_token: 'TOKEN' }))
+      .mockResolvedValueOnce(jsonResponse({ errcode: 0, errmsg: 'ok' }));
+
+    const result = await wecomChannel.send({ title: '测试', content: '**内容**' }, config);
+
+    expect(result.success).toBe(true);
+    expect(fetchMock.mock.calls[0][0]).toContain('/gettoken?');
+    expect(fetchMock.mock.calls[0][0]).toContain('corpid=ww-corp');
+    expect(fetchMock.mock.calls[1][0]).toContain('/message/send?access_token=TOKEN');
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({
+      touser: 'zhangsan|lisi',
+      msgtype: 'text',
+      agentid: 1000002,
+      text: { content: '测试\n\n内容' },
+      safe: 0
+    });
+  });
+
+  it('支持 markdown 消息体', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch')
+      .mockResolvedValueOnce(jsonResponse({ errcode: 0, access_token: 'TOKEN' }))
+      .mockResolvedValueOnce(jsonResponse({ errcode: 0 }));
+    await wecomChannel.send({ title: '标题', content: '**正文**' }, { ...config, WECOM_MSG_TYPE: 'markdown' });
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toMatchObject({
+      msgtype: 'markdown',
+      markdown: { content: '# 标题\n\n**正文**' }
+    });
+  });
+
+  it('缺少任一应用配置时不请求接口', async () => {
+    const fetchMock = vi.spyOn(globalThis, 'fetch');
+    const result = await wecomChannel.send({ title: '测试', content: '内容' }, {});
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('WECOM_CORP_ID');
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('获取 access_token 失败时返回企业微信错误', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse({ errcode: 40013, errmsg: 'invalid corpid' }));
+    const result = await wecomChannel.send({ title: '测试', content: '内容' }, config);
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('40013');
   });
 });
 
