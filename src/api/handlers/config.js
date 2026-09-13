@@ -7,7 +7,9 @@ const SECRET_FIELDS = [
   'NOTIFYX_API_KEY',
   'WEBHOOK_URL',
   'WEBHOOK_HEADERS',
+  // 旧版机器人字段可能仍存在于 KV，升级后也不能将其回显。
   'WECHATBOT_WEBHOOK',
+  'WECOM_SECRET',
   'RESEND_API_KEY',
   'BARK_DEVICE_KEY',
   'THIRD_PARTY_API_TOKEN',
@@ -95,10 +97,11 @@ async function handleUpdateConfig(request, env) {
 
       SHOW_LUNAR: newConfig.SHOW_LUNAR === true,
 
-      WECHATBOT_WEBHOOK: mergeSecretField(config, newConfig, 'WECHATBOT_WEBHOOK', clearSecretFields),
-      WECHATBOT_MSG_TYPE: newConfig.WECHATBOT_MSG_TYPE || 'text',
-      WECHATBOT_AT_MOBILES: newConfig.WECHATBOT_AT_MOBILES || '',
-      WECHATBOT_AT_ALL: newConfig.WECHATBOT_AT_ALL || 'false',
+      WECOM_CORP_ID: (newConfig.WECOM_CORP_ID || '').trim(),
+      WECOM_SECRET: mergeSecretField(config, newConfig, 'WECOM_SECRET', clearSecretFields),
+      WECOM_AGENT_ID: (newConfig.WECOM_AGENT_ID != null ? String(newConfig.WECOM_AGENT_ID) : '').trim(),
+      WECOM_TO_USER: (newConfig.WECOM_TO_USER || '').trim(),
+      WECOM_MSG_TYPE: newConfig.WECOM_MSG_TYPE === 'markdown' ? 'markdown' : 'text',
 
       RESEND_API_KEY: mergeSecretField(config, newConfig, 'RESEND_API_KEY', clearSecretFields),
       EMAIL_FROM: newConfig.EMAIL_FROM || '',

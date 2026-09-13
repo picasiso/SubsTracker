@@ -127,7 +127,7 @@ Cloudflare Dashboard → **Workers & Pages → KV** → 打开 `SUBSCRIPTIONS_KV
 |------|------------|
 | Telegram | Bot Token + Chat ID；Forum 群可选 Topic ID |
 | Bark | Device Key；自建可填 Server |
-| 企业微信 | 群机器人 Webhook |
+| 企业微信 | 自建应用 CorpID、Secret、AgentId、接收人 UserID |
 | ntfy | Server（默认 ntfy.sh）+ Topic；可选 Token |
 | 邮件 | Resend API Key + 收发邮箱 |
 | Webhook | 任意 HTTP 地址 + 可选模板 |
